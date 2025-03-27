@@ -16,61 +16,65 @@
 </select>
 <canvas id="myChart"></canvas>
 
-const data = {
-    labels: [],
-    dataset1: [],
-    dataset2: []
-};
-
-function fetchCSVData() {
-    fetch('data/data.csv')
-        .then(response => response.text())
-        .then(csvText => {
-            const parsedData = Papa.parse(csvText, {
-                header: true,
-                dynamicTyping: true
-            }).data;
-
-            data.labels = parsedData.map(row => row.Month);
-            data.dataset1 = parsedData.map(row => row.Dataset1);
-            data.dataset2 = parsedData.map(row => row.Dataset2);
-
-            updateChart('dataset1');
-        });
-}
-
-const ctx = document.getElementById('myChart').getContext('2d');
-let myChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
+<script>
+    const data = {
         labels: [],
-        datasets: [{
-            label: 'Dataset',
-            data: [],
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            borderColor: 'rgba(75, 192, 192, 1)',
-            borderWidth: 1
-        }]
-    },
-    options: {
-        scales: {
-            y: {
-                beginAtZero: true
+        dataset1: [],
+        dataset2: []
+    };
+    
+    function fetchCSVData() {
+        fetch('data/data.csv')
+            .then(response => response.text())
+            .then(csvText => {
+                const parsedData = Papa.parse(csvText, {
+                    header: true,
+                    dynamicTyping: true
+                }).data;
+    
+                data.labels = parsedData.map(row => row.Month);
+                data.dataset1 = parsedData.map(row => row.Dataset1);
+                data.dataset2 = parsedData.map(row => row.Dataset2);
+    
+                updateChart('dataset1');
+            });
+    }
+    
+    const ctx = document.getElementById('myChart').getContext('2d');
+    let myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Dataset',
+                data: [],
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
             }
         }
+    });
+    
+    $('#dataFilter').on('change', function() {
+        const selectedDataset = $(this).val();
+        updateChart(selectedDataset);
+    });
+    
+    function updateChart(dataset) {
+        myChart.data.labels = data.labels;
+        myChart.data.datasets[0].data = data[dataset];
+        myChart.update();
     }
-});
-
-$('#dataFilter').on('change', function() {
-    const selectedDataset = $(this).val();
-    updateChart(selectedDataset);
-});
-
-function updateChart(dataset) {
-    myChart.data.labels = data.labels;
-    myChart.data.datasets[0].data = data[dataset];
-    myChart.update();
-}
-
-// Fetch the CSV data when the page loads
-fetchCSVData();
+    
+    // Fetch the CSV data when the page loads
+    fetchCSVData();
+</script>
+</body>
+</html>
