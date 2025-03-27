@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chart with Dropdown Filter</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+</head>
+<body>
+
+<select id="dataFilter">
+    <option value="dataset1">Dataset 1</option>
+    <option value="dataset2">Dataset 2</option>
+</select>
+<canvas id="myChart"></canvas>
+
+const data = {
+    labels: [],
+    dataset1: [],
+    dataset2: []
+};
+
+function fetchCSVData() {
+    fetch('data/data.csv')
+        .then(response => response.text())
+        .then(csvText => {
+            const parsedData = Papa.parse(csvText, {
+                header: true,
+                dynamicTyping: true
+            }).data;
+
+            data.labels = parsedData.map(row => row.Month);
+            data.dataset1 = parsedData.map(row => row.Dataset1);
+            data.dataset2 = parsedData.map(row => row.Dataset2);
+
+            updateChart('dataset1');
+        });
+}
+
+const ctx = document.getElementById('myChart').getContext('2d');
+let myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: [],
+        datasets: [{
+            label: 'Dataset',
+            data: [],
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+$('#dataFilter').on('change', function() {
+    const selectedDataset = $(this).val();
+    updateChart(selectedDataset);
+});
+
+function updateChart(dataset) {
+    myChart.data.labels = data.labels;
+    myChart.data.datasets[0].data = data[dataset];
+    myChart.update();
+}
+
+// Fetch the CSV data when the page loads
+fetchCSVData();
