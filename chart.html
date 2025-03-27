@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chart with Dropdown Filter</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <select id="dataFilter">
+        <option value="dataset1">Dataset 1</option>
+        <option value="dataset2">Dataset 2</option>
+    </select>
+    <canvas id="myChart"></canvas>
+
+    <script>
+        const data = {
+            dataset1: [10, 20, 30, 40, 50],
+            dataset2: [5, 15, 25, 35, 45]
+        };
+
+        const ctx = document.getElementById('myChart').getContext('2d');
+        let myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['January', 'February', 'March', 'April', 'May'],
+                datasets: [{
+                    label: 'Dataset',
+                    data: data.dataset1,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        $('#dataFilter').on('change', function() {
+            selectedDataset = $(this).val();
+            myChart.data.datasets[0].data = data[selectedDataset];
+            myChart.update();
+        });
+    </script>
+</body>
+</html>
