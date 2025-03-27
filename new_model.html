@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sine and Cosine Chart</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        input {
+            margin: 10px;
+        }
+        button {
+            margin: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+        img {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Sine and Cosine Chart</h1>
+    <form method="post">
+        <label for="input1">Input 1:</label>
+        <input type="number" id="input1" name="input1" value="{{ input1 }}">
+        <label for="input2">Input 2:</label>
+        <input type="number" id="input2" name="input2" value="{{ input2 }}">
+        <button type="submit">Update Chart</button>
+    </form>
+    <img src="data:image/png;base64,{{ plot_url }}" alt="Sine and Cosine Chart">
+</body>
+</html>
